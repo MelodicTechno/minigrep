@@ -33,7 +33,19 @@ impl Config {
         let query = args[1].clone();
         let file_path = args[2].clone();
 
-        let ignore_case = env::var("IGNORE_CASE").is_ok();
+        let ignore_case = if env::var("IGNORE_CASE").is_ok() {
+            env::var("IGNORE_CASE").is_ok()
+        } else if args.get(3) != None {
+            match &(args[3])[..] {
+                "true" => true,
+                "false" => false,
+                "1" => true,
+                "0" => false,
+                _ => false
+            }
+        } else {
+            false
+        };
 
         Ok(Config { query, file_path, ignore_case })
     }
